@@ -1,0 +1,67 @@
+version: '3'
+
+services:
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    networks:
+      - inventory-network
+
+  producer:
+    build: ./producer
+    ports:
+      - "8000:8000"
+    depends_on:
+      - rabbitmq
+    networks:
+      - inventory-network
+
+  consumer_one:
+    build: ./consumer_one
+    ports:
+      - "8001:8001"
+    depends_on:
+      - rabbitmq
+    networks:
+      - inventory-network
+
+  consumer_two:
+    build: ./consumer_two
+    ports:
+      - "8002:8002"
+    depends_on:
+      - rabbitmq
+    networks:
+      - inventory-network
+
+  consumer_three:
+    build: ./consumer_three
+    ports:
+      - "8003:8003"
+    depends_on:
+      - rabbitmq
+    networks:
+      - inventory-network
+
+  consumer_four:
+    build: ./consumer_four
+    ports:
+      - "8004:8004"
+    depends_on:
+      - rabbitmq
+    networks:
+      - inventory-network
+
+  database:
+    build: ./database_service
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: mydatabase
+    networks:
+      - inventory-network
+
+networks:
+  inventory-network:
+    driver: bridge
